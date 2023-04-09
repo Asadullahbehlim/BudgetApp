@@ -8,13 +8,27 @@
 import UIKit
 import CoreData
 
-class ViewController: UIViewController {
+class ViewController:  UITableViewController {
     
     private var persistentContainer: NSPersistentContainer
+    private var fetchedResultsController: NSFetchedResultsController<BudgetCategory>!
     
     init(persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer
         super.init(nibName: nil, bundle: nil)
+        
+        let request = BudgetCategory.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+        }
+        catch {
+            print(error.localizedDescription)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -25,6 +39,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         setupUI()
+        // register cell
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "BudgetTableViewCell")
     }
     
     private func setupUI() {
@@ -38,8 +54,25 @@ class ViewController: UIViewController {
         let navController = UINavigationController(rootViewController: AddBudgetViewController(persistentContainer: persistentContainer))
         present(navController, animated: true)
     }
-     
-
-
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (fetchedResultsController.fetchedObjects ?? []).count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BudgetTableViewCell", for: indexPath)
+        let budgetCategory = fetchedResultsController.object(at: indexPath)
+        
+       var configuration = cell.defaultContentConfiguration()
+        configuration.text = budgetCategory.name
+        cell.contentConfiguration = configuration
+        return cell
+    }
+    
 }
 
+extension ViewController: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.reloadData()
+    }
+}

@@ -35,7 +35,7 @@ class AddBudgetViewController : UIViewController {
         var config = UIButton.Configuration.bordered()
         let button = UIButton(configuration: config)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Add Budget", for: .normal)
+        button.setTitle("Save", for: .normal)
         return button
     }()
     
@@ -47,6 +47,32 @@ class AddBudgetViewController : UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    private var isFormValid: Bool {
+        guard let name = nameTextField.text,
+              let amount = amountTextField.text  else {
+            return false
+        }
+        return !amount.isEmpty && !name.isEmpty && amount.isNumeric && amount.isGreaterThan(0)
+    }
+    
+    private func saveBudgetCategory() {
+        guard let name = nameTextField.text,
+              let amount = amountTextField.text else {
+            return
+        }
+        do {
+            let budgetCategory = BudgetCategory(context: persistentContainer.viewContext)
+            budgetCategory.name = name
+            budgetCategory.amount = Double(amount)!
+            try persistentContainer.viewContext.save()
+            dismiss(animated: true)
+        }
+        
+        catch {
+            errorMessageLabel.text = "Unable to save budget category"
+        }
+    }
     
     init(persistentContainer: NSPersistentContainer){
         self.persistentContainer = persistentContainer
@@ -83,8 +109,8 @@ class AddBudgetViewController : UIViewController {
         
         // Add Constraints
         
-        nameTextField.widthAnchor.constraint(equalToConstant: 300).isActive = true
-        amountTextField.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        nameTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        amountTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         addBudgetItem.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         stackView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
@@ -94,7 +120,12 @@ class AddBudgetViewController : UIViewController {
         addBudgetItem.addTarget(self, action: #selector(addBudgetTapped), for: .touchUpInside)
     }
     
-    @objc func addBudgetTapped(sender : UIButton) {
-        
+    @objc func addBudgetTapped(_ sender : UIButton) {
+        if isFormValid {
+          saveBudgetCategory()
+        }
+        else {
+            errorMessageLabel.text = "Unable to save Budget. Name & Amount is required "
+        }
     }
 }

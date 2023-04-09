@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		413EF2D329E145CE0006C58B /* AddBudgetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413EF2D229E145CE0006C58B /* AddBudgetViewController.swift */; };
+		415FAF6429E2A77C00775259 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415FAF6329E2A77C00775259 /* String+Extensions.swift */; };
 		41CF7E7D29DD551800EB0922 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CF7E7C29DD551800EB0922 /* AppDelegate.swift */; };
 		41CF7E8129DD551800EB0922 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CF7E8029DD551800EB0922 /* ViewController.swift */; };
 		41CF7E8629DD551900EB0922 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41CF7E8529DD551900EB0922 /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 
 /* Begin PBXFileReference section */
 		413EF2D229E145CE0006C58B /* AddBudgetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBudgetViewController.swift; sourceTree = "<group>"; };
+		415FAF6329E2A77C00775259 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		41CF7E7929DD551800EB0922 /* BudgetApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BudgetApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41CF7E7C29DD551800EB0922 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41CF7E8029DD551800EB0922 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -35,6 +37,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		415FAF6229E2A75600775259 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				415FAF6329E2A77C00775259 /* String+Extensions.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		41CF7E7029DD551800EB0922 = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +70,7 @@
 				41CF7E8A29DD551900EB0922 /* Info.plist */,
 				41CF7E9029DD5A1900EB0922 /* BudgetModel.xcdatamodeld */,
 				413EF2D229E145CE0006C58B /* AddBudgetViewController.swift */,
+				415FAF6229E2A75600775259 /* Extension */,
 			);
 			path = BudgetApp;
 			sourceTree = "<group>";
@@ -133,6 +144,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				415FAF6429E2A77C00775259 /* String+Extensions.swift in Sources */,
 				41CF7E8129DD551800EB0922 /* ViewController.swift in Sources */,
 				41CF7E7D29DD551800EB0922 /* AppDelegate.swift in Sources */,
 				41CF7E9229DD5A1900EB0922 /* BudgetModel.xcdatamodeld in Sources */,

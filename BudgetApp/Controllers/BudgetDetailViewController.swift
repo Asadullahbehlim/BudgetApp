@@ -12,6 +12,7 @@ import CoreData
 class BudgetDetailViewController: UIViewController {
     
     private var persistentContainer: NSPersistentContainer
+    private var fetchedResultsController: NSFetchedResultsController<Transactions>!
     private var budgetCategory: BudgetCategory
     
     lazy var nameTextField: UITextField = {
@@ -67,6 +68,22 @@ class BudgetDetailViewController: UIViewController {
         self.persistentContainer = persistentContainer
         self.budgetCategory = budgetCategory
         super.init(nibName: nil, bundle: nil)
+        
+        // create request based on selected budget category
+        let request = Transactions.fetchRequest()
+        request.predicate = NSPredicate(format: "category = %@", budgetCategory)
+        request.sortDescriptors = [NSSortDescriptor(key: "dateCreated", ascending: false)]
+        
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+        }
+        catch {
+            errorMessageLabel.text = "Unable to fetch transactions"
+            
+        }
     }
     override  func viewDidLoad() {
         super.viewDidLoad()
@@ -104,6 +121,7 @@ class BudgetDetailViewController: UIViewController {
         nameTextField.widthAnchor.constraint(equalToConstant: 200).isActive = true
         amountTextField.widthAnchor.constraint(equalToConstant: 200).isActive = true
         saveTransactionButton.centerXAnchor.constraint(equalTo: stackView.centerXAnchor).isActive = true
+        saveTransactionButton.addTarget(self, action: #selector(saveTransactionButtonPressed), for: .touchUpInside)
         
         stackView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -111,17 +129,65 @@ class BudgetDetailViewController: UIViewController {
         tableView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         tableView.heightAnchor.constraint(equalToConstant: 600).isActive = true
     }
+    private var isFormValid: Bool {
+        guard let name = nameTextField.text,
+              let amount = amountTextField.text  else {
+            return false
+        }
+        return !amount.isEmpty && !name.isEmpty && amount.isNumeric && amount.isGreaterThan(0)
+    }
+    
+    private func saveTransaction() {
+        guard let name = nameTextField.text,
+              let amount = amountTextField.text else {
+            return
+        }
+        
+        let transaction = Transactions(context: persistentContainer.viewContext)
+        transaction.name = name
+        transaction.amount = Double(amount) ?? 0.0
+        transaction.dateCreated = Date()
+        transaction.category = budgetCategory
+      //  budgetCategory.addToTransactions(transaction)
+        
+        do {
+            try persistentContainer.viewContext.save()
+            tableView.reloadData()
+        }
+        catch {
+            errorMessageLabel.text = "Unable To Save Transaction"
+        }
+    }
+    
+    @objc func saveTransactionButtonPressed(_ sender: UIButton) {
+        if isFormValid {
+            saveTransaction()
+        } else {
+            errorMessageLabel.text = "Make sure name and amount is valid"
+        }
+    }
     
 }
 
 extension BudgetDetailViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionTableViewCell", for: indexPath)
+        let transact = fetchedResultsController.object(at: indexPath)
+        //cell config
+        var content = cell.defaultContentConfiguration()
+        content.text = transact.name
+        content.secondaryText = transact.amount.formatAsCurrency()
+        cell.contentConfiguration = content
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+         (fetchedResultsController.fetchedObjects ?? []).count
+    }
+}
+extension BudgetDetailViewController : NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.reloadData()
     }
 }
 

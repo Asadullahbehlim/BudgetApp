@@ -64,6 +64,28 @@ class BudgetDetailViewController: UIViewController {
         return label
     }()
     
+    lazy var transactionsTotalLabel: UILabel = {
+       let label = UILabel()
+        label.textAlignment = .center
+        return label
+    }()
+    
+    var transactionTotal: Double {
+        let transactions = fetchedResultsController.fetchedObjects ?? []
+        return transactions.reduce(0) {
+            next, transactions in next+transactions.amount
+        }
+    }
+    private func resetForms() {
+        nameTextField.text = ""
+        amountTextField.text = ""
+        errorMessageLabel.text = ""
+    }
+    
+    private func updateTransactionTotal() {
+        transactionsTotalLabel.text = transactionTotal.formatAsCurrency()
+    }
+    
     init(persistentContainer: NSPersistentContainer, budgetCategory: BudgetCategory) {
         self.persistentContainer = persistentContainer
         self.budgetCategory = budgetCategory
@@ -79,6 +101,7 @@ class BudgetDetailViewController: UIViewController {
         
         do {
             try fetchedResultsController.performFetch()
+            resetForms()
         }
         catch {
             errorMessageLabel.text = "Unable to fetch transactions"
@@ -88,6 +111,7 @@ class BudgetDetailViewController: UIViewController {
     override  func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        updateTransactionTotal()
     }
     
     required init?(coder: NSCoder) {
@@ -113,8 +137,9 @@ class BudgetDetailViewController: UIViewController {
         stackView.addArrangedSubview(amountTextField)
         stackView.addArrangedSubview(saveTransactionButton)
         stackView.addArrangedSubview(errorMessageLabel)
+        stackView.addArrangedSubview(transactionsTotalLabel)
         stackView.addArrangedSubview(tableView)
-        
+
         view.addSubview(stackView)
         
         //Add Constraints
@@ -136,6 +161,19 @@ class BudgetDetailViewController: UIViewController {
         }
         return !amount.isEmpty && !name.isEmpty && amount.isNumeric && amount.isGreaterThan(0)
     }
+    
+    private func deleteTransaction(_ transaction: Transactions) {
+        persistentContainer.viewContext.delete(transaction)
+        do {
+            try persistentContainer.viewContext.save()
+            
+        }
+        catch {
+            errorMessageLabel.text = "Unable to delete transaction"
+        }
+        
+    }
+    
     
     private func saveTransaction() {
         guard let name = nameTextField.text,
@@ -182,15 +220,25 @@ extension BudgetDetailViewController : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-         (fetchedResultsController.fetchedObjects ?? []).count
-    }
-}
-extension BudgetDetailViewController : NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.reloadData()
+        (fetchedResultsController.fetchedObjects ?? []).count
     }
 }
 
+extension BudgetDetailViewController : NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        updateTransactionTotal()
+        tableView.reloadData()
+    }
+  }
+
 extension BudgetDetailViewController : UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let transaction = fetchedResultsController.object(at: indexPath)
+            deleteTransaction(transaction)
+        }
+        else {
+            
+        }
+    }
 }

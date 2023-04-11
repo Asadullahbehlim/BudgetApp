@@ -63,6 +63,24 @@ class ViewController:  UITableViewController {
         let budgetCategory = fetchedResultsController.object(at: indexPath)
         self.navigationController?.pushViewController(BudgetDetailViewController(persistentContainer: persistentContainer, budgetCategory: budgetCategory), animated: true)
     }
+    private func deleteBudgetCategory(_ budgetCategory: BudgetCategory) {
+        persistentContainer.viewContext.delete(budgetCategory)
+        do {
+            try persistentContainer.viewContext.save()
+        }
+        catch {
+            showAlert(title: "Error", message: "Unabe To Save Budget Category")
+        }
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let budgetCategory = fetchedResultsController.object(at: indexPath)
+            deleteBudgetCategory(budgetCategory)
+        }
+            
+    }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -85,3 +103,4 @@ extension ViewController: NSFetchedResultsControllerDelegate {
         tableView.reloadData()
     }
 }
+

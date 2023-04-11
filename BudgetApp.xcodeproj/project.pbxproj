@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		413EF2D329E145CE0006C58B /* AddBudgetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413EF2D229E145CE0006C58B /* AddBudgetViewController.swift */; };
 		415FAF6429E2A77C00775259 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415FAF6329E2A77C00775259 /* String+Extensions.swift */; };
+		4195300F29E528880072CCCE /* BudgetCategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195300E29E528880072CCCE /* BudgetCategoryTableViewCell.swift */; };
+		4195301229E532460072CCCE /* BudgetCategory+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4195301129E532460072CCCE /* BudgetCategory+CoreDataClass.swift */; };
 		41A93ED629E3EC39004E260D /* Double+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A93ED529E3EC39004E260D /* Double+Extension.swift */; };
 		41AA2D1E29E34C6D00FE7C5A /* BudgetDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AA2D1D29E34C6D00FE7C5A /* BudgetDetailViewController.swift */; };
 		41CF7E7D29DD551800EB0922 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CF7E7C29DD551800EB0922 /* AppDelegate.swift */; };
@@ -20,6 +22,8 @@
 /* Begin PBXFileReference section */
 		413EF2D229E145CE0006C58B /* AddBudgetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBudgetViewController.swift; sourceTree = "<group>"; };
 		415FAF6329E2A77C00775259 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		4195300E29E528880072CCCE /* BudgetCategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetCategoryTableViewCell.swift; sourceTree = "<group>"; };
+		4195301129E532460072CCCE /* BudgetCategory+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BudgetCategory+CoreDataClass.swift"; sourceTree = "<group>"; };
 		41A93ED529E3EC39004E260D /* Double+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extension.swift"; sourceTree = "<group>"; };
 		41AA2D1D29E34C6D00FE7C5A /* BudgetDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetDetailViewController.swift; sourceTree = "<group>"; };
 		41CF7E7929DD551800EB0922 /* BudgetApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BudgetApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -48,6 +52,22 @@
 				41A93ED529E3EC39004E260D /* Double+Extension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		4195300D29E528700072CCCE /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				4195300E29E528880072CCCE /* BudgetCategoryTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		4195301029E532320072CCCE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4195301129E532460072CCCE /* BudgetCategory+CoreDataClass.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		41AA2D1C29E34C3600FE7C5A /* Controllers */ = {
@@ -79,8 +99,10 @@
 		41CF7E7B29DD551800EB0922 /* BudgetApp */ = {
 			isa = PBXGroup;
 			children = (
+				4195301029E532320072CCCE /* Models */,
 				41AA2D1C29E34C3600FE7C5A /* Controllers */,
 				415FAF6229E2A75600775259 /* Extension */,
+				4195300D29E528700072CCCE /* Cells */,
 				41CF7E7C29DD551800EB0922 /* AppDelegate.swift */,
 				41CF7E8529DD551900EB0922 /* Assets.xcassets */,
 				41CF7E8A29DD551900EB0922 /* Info.plist */,
@@ -158,10 +180,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4195300F29E528880072CCCE /* BudgetCategoryTableViewCell.swift in Sources */,
 				415FAF6429E2A77C00775259 /* String+Extensions.swift in Sources */,
 				41CF7E8129DD551800EB0922 /* ViewController.swift in Sources */,
 				41A93ED629E3EC39004E260D /* Double+Extension.swift in Sources */,
 				41AA2D1E29E34C6D00FE7C5A /* BudgetDetailViewController.swift in Sources */,
+				4195301229E532460072CCCE /* BudgetCategory+CoreDataClass.swift in Sources */,
 				41CF7E7D29DD551800EB0922 /* AppDelegate.swift in Sources */,
 				41CF7E9229DD5A1900EB0922 /* BudgetModel.xcdatamodeld in Sources */,
 				413EF2D329E145CE0006C58B /* AddBudgetViewController.swift in Sources */,

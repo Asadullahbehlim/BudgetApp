@@ -40,7 +40,7 @@ class ViewController:  UITableViewController {
         // Do any additional setup after loading the view.
         setupUI()
         // register cell
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "BudgetTableViewCell")
+        tableView.register(BudgetTableViewCell.self, forCellReuseIdentifier: "BudgetTableViewCell")
     }
     
     private func setupUI() {
@@ -64,17 +64,20 @@ class ViewController:  UITableViewController {
         self.navigationController?.pushViewController(BudgetDetailViewController(persistentContainer: persistentContainer, budgetCategory: budgetCategory), animated: true)
     }
     
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "BudgetTableViewCell", for: indexPath)
-        cell.accessoryType = .disclosureIndicator
-        let budgetCategory = fetchedResultsController.object(at: indexPath)
         
-       var configuration = cell.defaultContentConfiguration()
-        configuration.text = budgetCategory.name
-        cell.contentConfiguration = configuration
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "BudgetTableViewCell", for: indexPath) as? BudgetTableViewCell else {
+            return BudgetTableViewCell(style: .default, reuseIdentifier: "BudgetTableViewCell")
+        }
+        
+        cell.accessoryType = .disclosureIndicator
+        
+        
+        let budgetCategory = fetchedResultsController.object(at: indexPath)
+        cell.configure(budgetCategory)
         return cell
     }
-    
 }
 
 extension ViewController: NSFetchedResultsControllerDelegate {

@@ -69,13 +69,7 @@ class BudgetDetailViewController: UIViewController {
         label.textAlignment = .center
         return label
     }()
-    
-    var transactionTotal: Double {
-        let transactions = fetchedResultsController.fetchedObjects ?? []
-        return transactions.reduce(0) {
-            next, transactions in next+transactions.amount
-        }
-    }
+   
     private func resetForms() {
         nameTextField.text = ""
         amountTextField.text = ""
@@ -83,7 +77,7 @@ class BudgetDetailViewController: UIViewController {
     }
     
     private func updateTransactionTotal() {
-        transactionsTotalLabel.text = transactionTotal.formatAsCurrency()
+        transactionsTotalLabel.text = budgetCategory.transactionTotal.formatAsCurrency()
     }
     
     init(persistentContainer: NSPersistentContainer, budgetCategory: BudgetCategory) {
@@ -101,7 +95,6 @@ class BudgetDetailViewController: UIViewController {
         
         do {
             try fetchedResultsController.performFetch()
-            resetForms()
         }
         catch {
             errorMessageLabel.text = "Unable to fetch transactions"
@@ -190,6 +183,7 @@ class BudgetDetailViewController: UIViewController {
         
         do {
             try persistentContainer.viewContext.save()
+            resetForms()
             tableView.reloadData()
         }
         catch {
